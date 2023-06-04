@@ -1,14 +1,14 @@
 package com.checkme.CheckMe.auth.controller;
 
-import com.sambath.security.auth.dto.AuthenticationRequest;
-import com.sambath.security.auth.dto.AuthenticationResponse;
-import com.sambath.security.auth.dto.RegisterRequest;
-import com.sambath.security.auth.dto.SuccessResponse;
-import com.sambath.security.auth.service.AuthenticationService;
-import com.sambath.security.confirmationToken.ConfirmationTokenRequest;
-import com.sambath.security.email.EmailSenderService;
-import com.sambath.security.user.dto.RefreshTokenRequest;
-import com.sambath.security.user.dto.RefreshTokenResponse;
+import com.checkme.CheckMe.auth.dto.AuthenticationRequest;
+import com.checkme.CheckMe.auth.dto.AuthenticationResponse;
+import com.checkme.CheckMe.auth.dto.RegisterRequest;
+import com.checkme.CheckMe.auth.dto.SuccessResponse;
+import com.checkme.CheckMe.auth.service.AuthenticationService;
+import com.checkme.CheckMe.confirmationToken.ConfirmationTokenRequest;
+import com.checkme.CheckMe.email.EmailSenderService;
+import com.checkme.CheckMe.user.dto.RefreshTokenRequest;
+import com.checkme.CheckMe.user.dto.RefreshTokenResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
