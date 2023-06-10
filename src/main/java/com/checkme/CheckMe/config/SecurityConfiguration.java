@@ -5,6 +5,7 @@ import com.checkme.CheckMe.oauth2.CustomOAuth2UserService;
 import com.checkme.CheckMe.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.checkme.CheckMe.oauth2.OAuth2AuthenticationFailureHandler;
 import com.checkme.CheckMe.oauth2.OAuth2AuthenticationSuccessHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +33,24 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/oauth2/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/v1/auth/change-password").authenticated()
+                        .requestMatchers("/api/v1/user/profile").authenticated()
+                        .requestMatchers("/api/v1/user/deactivate").authenticated()
+                        .requestMatchers("/api/v1/user/organizer").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> response.sendError(403))
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setContentType("application/json");
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("{\"error\": \"You're not authorized to access this resource\"}");
+                        })
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authorization -> authorization

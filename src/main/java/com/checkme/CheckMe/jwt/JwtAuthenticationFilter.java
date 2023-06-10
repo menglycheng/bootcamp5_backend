@@ -39,7 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         jwt = authorizationHeader.substring(7); // Get JWT
-        userEmail = jwtUtil.extractUsernameAccessToken(jwt); // Extract user email from JWT token;
+        try {
+            userEmail = jwtUtil.extractUsernameAccessToken(jwt); // Extract user email from JWT token;
+        } catch (Exception e) {
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Access token is invalid\"}");
+            return;
+        }
+
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // Load user details from database
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
