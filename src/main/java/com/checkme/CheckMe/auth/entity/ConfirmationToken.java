@@ -1,4 +1,4 @@
-package com.checkme.CheckMe.confirmationToken;
+package com.checkme.CheckMe.auth.entity;
 
 import com.checkme.CheckMe.user.entity.User;
 import jakarta.persistence.*;
@@ -16,20 +16,13 @@ import java.time.LocalDateTime;
 @Entity
 public class ConfirmationToken {
     @Id
-    @SequenceGenerator(
-            name = "confirmation_token_sequence",
-            sequenceName = "confirmation_token_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "confirmation_token_sequence"
-    )
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
     private String token;
     private LocalDateTime createdAt;
     private LocalDateTime expiresAt;
     private LocalDateTime confirmedAt;
-    @ManyToOne
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private User user;
 }

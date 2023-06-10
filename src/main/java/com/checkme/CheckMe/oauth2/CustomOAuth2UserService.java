@@ -1,5 +1,6 @@
 package com.checkme.CheckMe.oauth2;
 
+import com.checkme.CheckMe.auth.service.AuthenticationService;
 import com.checkme.CheckMe.exception.BadRequestException;
 import com.checkme.CheckMe.exception.OAuth2AuthenticationProcessingException;
 import com.checkme.CheckMe.oauth2.user.OAuth2UserInfo;
@@ -9,6 +10,8 @@ import com.checkme.CheckMe.user.entity.AuthProvider;
 import com.checkme.CheckMe.user.entity.Role;
 import com.checkme.CheckMe.user.entity.User;
 import com.checkme.CheckMe.user.repository.UserRepository;
+import com.checkme.CheckMe.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -24,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -72,6 +76,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .name(oAuth2UserInfo.getName())
                 .firstName(oAuth2UserInfo.getFirstName())
                 .lastName(oAuth2UserInfo.getLastName())
+                .username(userService.generateUniqueUsername(oAuth2UserInfo.getFirstName(), oAuth2UserInfo.getLastName(), oAuth2UserInfo.getName()))
                 .email(oAuth2UserInfo.getEmail())
                 .imageUrl(oAuth2UserInfo.getImageUrl())
                 .role(Role.USER)

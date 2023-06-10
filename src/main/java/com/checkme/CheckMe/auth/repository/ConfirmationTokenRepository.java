@@ -1,5 +1,6 @@
-package com.checkme.CheckMe.confirmationToken;
+package com.checkme.CheckMe.auth.repository;
 
+import com.checkme.CheckMe.auth.entity.ConfirmationToken;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

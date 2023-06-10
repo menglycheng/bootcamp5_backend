@@ -1,12 +1,12 @@
 package com.checkme.CheckMe.email;
 
-public class EmailConfirmationTemplate {
-    public static String confirmEmailTemplate(String name, String link) {
+public class EmailEnableUserTemplate {
+    public static String enableUserEmailTemplate(String name, String link) {
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
-                "    <title>Email Confirmation</title>\n" +
+                "    <title>Account Activation</title>\n" +
                 "    <style>\n" +
                 "        /* Define button styles */\n" +
                 "        .button {\n" +
@@ -25,11 +25,12 @@ public class EmailConfirmationTemplate {
                 "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "    <h2>Confirmation Email</h2>\n" +
+                "    <h2>Account Activation</h2>\n" +
                 "    <p>Hello <strong>" + name + "</strong>,</p>\n" +
-                "    <p>Thank you for registering. Please click the button below to confirm your email:</p>\n" +
+                "    <p>Thank you for registering an account with us. Your account has been created successfully.</p>\n" +
+                "    <p>To activate your account, please click the following link:</p>\n" +
                 "    <p>\n" +
-                "        <a href=\"" + link + "\" class=\"button\">Confirm Email</a>\n" +
+                "        <a href=\"" + link + "\" class=\"button\">Activate Account</a>\n" +
                 "    </p>\n" +
                 "    <p>\n" +
                 "        Note: This link will expire in 15 minutes.\n" +

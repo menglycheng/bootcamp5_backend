@@ -1,5 +1,6 @@
-package com.checkme.CheckMe.confirmationToken;
+package com.checkme.CheckMe.auth.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ConfirmationTokenRequest {
-    @NotNull
+    @NotNull(message = "Token cannot be null")
+    @NotBlank(message = "Token cannot be blank")
     private String token;
 }

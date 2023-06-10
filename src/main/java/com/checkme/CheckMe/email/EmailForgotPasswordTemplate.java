@@ -1,7 +1,7 @@
 package com.checkme.CheckMe.email;
 
-public class EmailConfirmationTemplate {
-    public static String confirmEmailTemplate(String name, String link) {
+public class EmailForgotPasswordTemplate {
+    public static String forgotPasswordEmailTemplate(String name, String link) {
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
@@ -25,15 +25,15 @@ public class EmailConfirmationTemplate {
                 "    </style>\n" +
                 "</head>\n" +
                 "<body>\n" +
-                "    <h2>Confirmation Email</h2>\n" +
+                "    <h2>Forgot Password</h2>\n" +
                 "    <p>Hello <strong>" + name + "</strong>,</p>\n" +
-                "    <p>Thank you for registering. Please click the button below to confirm your email:</p>\n" +
+                "    <p>We received a request to reset your password. If you did not initiate this request, please ignore this email.</p>\n" +
+                "    <p>If you did request to reset your password, please click on the button below:</p>\n" +
                 "    <p>\n" +
-                "        <a href=\"" + link + "\" class=\"button\">Confirm Email</a>\n" +
+                "        <a href=\"" + link + "\" class=\"button\">Reset Password</a>\n" +
                 "    </p>\n" +
-                "    <p>\n" +
                 "        Note: This link will expire in 15 minutes.\n" +
-                "    </p>\n" +
+                "    <p>\n" +
                 "        <p>Thank you!</p>\n" +
                 "    </p>\n" +
                 "</body>\n" +

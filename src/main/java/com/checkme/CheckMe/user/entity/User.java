@@ -1,5 +1,6 @@
 package com.checkme.CheckMe.user.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -31,8 +32,15 @@ import java.util.List;
 )
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @SequenceGenerator(
+            name = "user_sequence",
+            sequenceName = "user_sequence",
+            allocationSize = 1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "user_sequence"
+    )
+    private Long id;
 
     @NotNull
     @NotBlank
@@ -43,22 +51,47 @@ public class User implements UserDetails {
 
     @NotNull
     @NotBlank
+    private String username;
+
+    @NotNull
+    @NotBlank
     @Email
     private String email;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @JsonIgnore
     private String password;
+
     private String imageUrl;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    private Affiliation affiliation;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @NotNull
     @Enumerated(EnumType.STRING)
-
     private AuthProvider provider;
+
     private String providerId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "organizer_id", referencedColumnName = "id", columnDefinition = "BIGINT")
+    private Organizer organizer;
+
+    @JsonIgnore
     private boolean enabled;
+
+    public String getUniqueUsername() {
+        return username;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
