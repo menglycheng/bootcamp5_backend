@@ -1,3 +1,6 @@
+# build jar file
+mvn clean package
+
 # build a docker image
 docker build -t checkme .
 
