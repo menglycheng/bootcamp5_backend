@@ -1,9 +1,6 @@
 package com.checkme.CheckMe.user.dto;
 
-import com.checkme.CheckMe.user.entity.Affiliation;
-import com.checkme.CheckMe.user.entity.Gender;
-import com.checkme.CheckMe.user.entity.Organizer;
-import com.checkme.CheckMe.user.entity.Role;
+import com.checkme.CheckMe.user.entity.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,4 +31,5 @@ public class UserProfileResponse {
     private Gender gender;
 
     private Organizer organizer;
+
 }

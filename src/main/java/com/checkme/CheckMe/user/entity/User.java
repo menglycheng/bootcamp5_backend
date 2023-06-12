@@ -1,5 +1,6 @@
 package com.checkme.CheckMe.user.entity;
 
+import com.checkme.CheckMe.event.entity.Event;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -76,6 +77,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+
+
     @NotNull
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
@@ -85,6 +88,8 @@ public class User implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "organizer_id", referencedColumnName = "id", columnDefinition = "BIGINT")
     private Organizer organizer;
+
+
 
     @JsonIgnore
     private boolean enabled;

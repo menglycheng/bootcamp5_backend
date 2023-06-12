@@ -1,11 +1,11 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/checkme_db
-    username:
-    password:
+    url: jdbc:postgresql://checkmedb.cbv6wzeyltlc.ap-southeast-1.rds.amazonaws.com:5432/checkme_db
+    username: postgres
+    password: admin123
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -13,8 +13,8 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
-    host:
-    port:
+    host: smtp.gmail.com
+    port: 587
     username:
     password:
     properties:
@@ -30,22 +30,22 @@ spring:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            client-id: 469316436656-70m3c9lf1f91jf20587nvu0ienb01kdc.apps.googleusercontent.com
+            client-secret: eoM3dFp6MTlg9cMwGL6Qto7B
             redirectUri: "{baseUrl}/api/v1/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           facebook:
-            client-id:
-            client-secret:
+            client-id: 1010794449561571
+            client-secret: 3deb2e17006b89c14f1f0928771f6039
             redirectUri: "{baseUrl}/api/v1/oauth2/callback/{registrationId}"
             scope:
               - email
               - public_profile
           github:
-            client-id:
-            client-secret:
+            client-id: 751fdff903eaf48a3aa5
+            client-secret: 2d4106e56336d22e8255d38b0b14539563371914
             redirectUri: "{baseUrl}/api/v1/oauth2/callback/{registrationId}"
             scope:
               - user:email
@@ -59,8 +59,8 @@ spring:
 app:
   auth:
     jwt:
-      access-token-secret-key:
-      refresh-token-secret-key:
+      access-token-secret-key: 58703273357638792F423F4528482B4D6250655368566D597133743677397A24
+      refresh-token-secret-key: 25432A462D4A614E645267556B58703273357638792F413F4428472B4B625065
       access-token-expiration-in-min: 5
       refresh-token-expiration-in-day: 30
       refresh-token-rotation: false
