@@ -1,15 +1,12 @@
 package com.checkme.CheckMe.event.controller;
+
 import com.checkme.CheckMe.event.entity.Event;
 import com.checkme.CheckMe.event.repository.EventRepository;
 import com.checkme.CheckMe.event.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -32,6 +29,12 @@ public class EventController {
     public void PostEvent(@RequestBody  Event event) throws IllegalAccessException {
         eventService.addNewEvent(event);
     }
+
+    @PutMapping("/update/{id}")
+    public void updateEvent(@PathVariable("id") Long id, @RequestBody Event event) {
+        eventService.updateEvent(id, event);
+    }
+
     @DeleteMapping("/delete")
     public void deleteEvent(@RequestParam("id") Long id) {
         eventService.deleteEvent(id);

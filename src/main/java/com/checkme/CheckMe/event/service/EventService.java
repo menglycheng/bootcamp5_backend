@@ -6,12 +6,12 @@ import com.checkme.CheckMe.exception.BadRequestException;
 import com.checkme.CheckMe.user.entity.User;
 import com.checkme.CheckMe.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,6 +115,19 @@ public class EventService {
         // Update user
 
 
+    }
+    public void updateEvent(Long id, Event updatedEvent) {
+        Event existingEvent = eventRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+        existingEvent.setTitle(updatedEvent.getTitle());
+        existingEvent.setDescription(updatedEvent.getDescription());
+        existingEvent.setCategory(updatedEvent.getCategory());
+        existingEvent.setLocation(updatedEvent.getLocation());
+        existingEvent.setPoster(updatedEvent.getPoster());
+        existingEvent.setRegisterUrl(updatedEvent.getRegisterUrl());
+        existingEvent.setViews(updatedEvent.getViews());
+        existingEvent.setDeadline(updatedEvent.getDeadline());
+        eventRepository.save(existingEvent);
     }
 
 
