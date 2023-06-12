@@ -1,13 +1,18 @@
 package com.checkme.CheckMe.event.entity;
 
+import com.checkme.CheckMe.user.dto.UserProfileResponse;
+import com.checkme.CheckMe.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity(name= "Event")
 @Table
+@NoArgsConstructor
 public class Event {
+
     @Id
     @SequenceGenerator(
             name = "event_sequence",
@@ -25,19 +30,15 @@ public class Event {
             nullable = false,
             columnDefinition = "TEXT"
     )
+
     private String title;
-    @Column(
-            name="organization_name",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String organizationName;
     @Column(
             name="description",
             nullable = false,
             columnDefinition = "TEXT"
     )
     private String description;
+
     @Column(
             name="category",
             nullable = false
@@ -61,15 +62,32 @@ public class Event {
             columnDefinition = "TEXT"
     )
     private String registerUrl;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private int views;
-    private LocalDate createdBy;
     @Column(
             name="deadline",
             nullable = false
     )
     private LocalDate deadline;
 
+    @Builder
+    public Event(Long id, String title, String description, Category category,
+                 String location, String poster, String registerUrl, User user,
+                 int views, LocalDate deadline) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.location = location;
+        this.poster = poster;
+        this.registerUrl = registerUrl;
+        this.user = user;
+        this.views = views;
+        this.deadline = deadline;
+    }
 
     // Constructors, getters, and setters
 
@@ -78,28 +96,18 @@ public class Event {
         COMPETITION,
         VOLUNTEER
     }
-    public Event() {
-        // Default constructor body
-    }
-    // Constructors
-    public Event(Long id, String title, String organizationName, String description, Category category, String location,
-                 String poster, String registerUrl, int views, LocalDate createdBy, LocalDate deadline) {
-        this.title = title;
-        this.organizationName = organizationName;
-        this.description = description;
-        this.category = category;
-        this.location = location;
-        this.poster = poster;
-        this.registerUrl = registerUrl;
-        this.views = views;
-        this.createdBy = createdBy;
-        this.deadline = deadline;
-    }
 
     // Getters and Setters
 
     public Long getId() {
         return id != null ? id : 0L;
+    }
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setId(long id) {
@@ -112,14 +120,6 @@ public class Event {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getOrganizationName() {
-        return organizationName;
-    }
-
-    public void setOrganizationName(String organizationName) {
-        this.organizationName = organizationName;
     }
 
     public String getDescription() {
@@ -170,13 +170,7 @@ public class Event {
         this.views = views;
     }
 
-    public LocalDate getCreatedBy() {
-        return createdBy;
-    }
 
-    public void setCreatedBy(LocalDate createdBy) {
-        this.createdBy = createdBy;
-    }
 
     public LocalDate getDeadline() {
         return deadline;
