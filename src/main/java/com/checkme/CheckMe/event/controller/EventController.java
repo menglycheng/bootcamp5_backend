@@ -16,7 +16,6 @@ public class EventController {
 
     @Autowired
     private EventController(EventRepository eventRepository, EventService eventService){
-
         this.eventService = eventService;
     }
 
@@ -28,6 +27,11 @@ public class EventController {
     @PostMapping("/post")
     public void PostEvent(@RequestBody  Event event) throws IllegalAccessException {
         eventService.addNewEvent(event);
+    }
+
+    @PostMapping("/view")
+    public void incrementViewCount(@RequestParam("id") Long id) {
+        eventService.incrementViewCount(id);
     }
 
     @PutMapping("/update")

@@ -129,7 +129,10 @@ public class EventService {
         existingEvent.setDeadline(updatedEvent.getDeadline());
         eventRepository.save(existingEvent);
     }
-
-
-
+    public void incrementViewCount(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+        event.setViews(event.getViews() + 1);
+        eventRepository.save(event);
+    }
 }
