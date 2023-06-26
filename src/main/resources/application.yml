@@ -15,8 +15,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
-    password:
+    username: jolmer.me@gmail.com
+    password: liczpmzlekzstpoz
     properties:
       mail:
         smtp:
@@ -64,8 +64,8 @@ app:
       access-token-expiration-in-min: 5
       refresh-token-expiration-in-day: 30
       refresh-token-rotation: false
-  #  cors:
-  #    allowedOrigins: http://localhost:3000 # Comma separated list of allowed origins
+    cors:
+      allowedOrigins: http://localhost:3000 # Comma separated list of allowed origins
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
