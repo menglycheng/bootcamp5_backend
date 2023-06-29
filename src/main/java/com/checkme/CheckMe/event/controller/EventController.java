@@ -19,6 +19,11 @@ public class EventController {
         this.eventService = eventService;
     }
 
+    @GetMapping("/{id}")
+    public Event getEventById(@PathVariable("id") Long id) {
+        return eventService.findEventById(id);
+    }
+
     @GetMapping
     public List<Event> getEvents(@RequestParam("status") String status, @RequestParam("category") String category) {
         return eventService.getEvents(status, category);

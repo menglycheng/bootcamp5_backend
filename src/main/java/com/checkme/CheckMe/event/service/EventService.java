@@ -25,6 +25,10 @@ public class EventService {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
     }
+    public Event findEventById(Long id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
+    }
     public List<Event> getEvents(String status, String category) {
         if (status.equals("all")) {
             if (category.equals("competition")) {
