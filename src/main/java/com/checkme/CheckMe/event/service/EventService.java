@@ -139,4 +139,11 @@ public class EventService {
         event.setViews(event.getViews() + 1);
         eventRepository.save(event);
     }
+
+    public List<Event> getEventsByUsername(String username) {
+        return eventRepository.findAll()
+                .stream()
+                .filter(event -> event.getUser().getUsername().equals(username))
+                .collect(Collectors.toList());
+    }
 }
