@@ -24,6 +24,10 @@ public class EventController {
         return eventService.findEventById(id);
     }
 
+    @GetMapping("/user")
+    public List<Event> getEventsByUsername(@RequestParam("username") String username) {
+        return eventService.getEventsByUsername(username);
+    }
     @GetMapping
     public List<Event> getEvents(@RequestParam("status") String status, @RequestParam("category") String category) {
         return eventService.getEvents(status, category);
