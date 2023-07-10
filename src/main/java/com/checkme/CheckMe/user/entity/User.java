@@ -65,6 +65,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     @NotNull
