@@ -32,7 +32,7 @@ public class SecurityConfiguration {
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Value("${app.auth.cors.allowedOrigins}")
-    private String[] allowedOrigins;
+    private final String[] allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
