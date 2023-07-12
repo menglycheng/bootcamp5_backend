@@ -145,7 +145,7 @@ public class EventService {
     public List<Event> getEventsByUsername(String username) {
         return eventRepository.findAll()
                 .stream()
-                .filter(event -> event.getUser().getUsername().equals(username))
+                .filter(event -> event.getUser().getUniqueUsername().equals(username))
                 .collect(Collectors.toList());
     }
 }

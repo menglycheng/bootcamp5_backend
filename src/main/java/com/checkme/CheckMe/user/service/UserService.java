@@ -95,6 +95,7 @@ public class UserService {
         user.setLastName(request.getLastName() != null ? request.getLastName() : user.getLastName());
         user.setDescription(request.getDescription() != null ? request.getDescription() : user.getDescription());
         user.setAffiliation(request.getAffiliation() != null ? request.getAffiliation() : user.getAffiliation());
+        user.setGender(request.getGender() !=null ? request.getGender() : user.getGender());
         user.setImageUrl(request.getImageUrl() != null ? request.getImageUrl() : user.getImageUrl());
         // If user update username, check if it is unique
         if (request.getUsername() != null) {
@@ -114,6 +115,7 @@ public class UserService {
                 .description(user.getDescription())
                 .imageUrl(user.getImageUrl())
                 .affiliation(user.getAffiliation())
+                .gender(user.getGender())
                 .build();
     }
 

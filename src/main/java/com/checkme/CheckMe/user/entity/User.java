@@ -65,6 +65,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Column(columnDefinition = "TEXT")
     private String imageUrl;
 
     @NotNull
@@ -109,8 +110,8 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return username; // Use email as username
+    public @NotNull String getUsername() {
+        return email; // Use email as username
     }
 
     @Override
