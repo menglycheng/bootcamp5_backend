@@ -86,6 +86,7 @@ public class EventService {
         throw new BadRequestException("No events found with the given status.");
     }
 
+
     public List<Event> deleteEvent(Long id) {
         if (eventRepository.findById(id).isEmpty()) {
             throw new BadRequestException("Event not found");
