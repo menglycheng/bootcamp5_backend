@@ -21,14 +21,16 @@ public class EventService {
     private final UserRepository userRepository;
 
     @Autowired
-    private EventService(EventRepository eventRepository, UserRepository userRepository){
+    private EventService(EventRepository eventRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
     }
+
     public Event findEventById(Long id) {
         return eventRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
     }
+
     public List<Event> getEvents(String status, String category) {
         if (status.equals("all")) {
             if (category.equals("competition")) {
@@ -43,11 +45,11 @@ public class EventService {
                         .collect(Collectors.toList());
             } else if (category.equals("all")) {
                 return eventRepository.findAll();
+            } else {
+                throw new BadRequestException("No events found with the given category.");
             }
-
-            throw new BadRequestException("No events found with the given category.");
         } else if (status.equals("active")) {
-            if (category.equals("competition")) {
+            if (category.equals("competition") || category.equals("all")) {
                 LocalDate today = LocalDate.now();
                 return eventRepository.findAll()
                         .stream()
@@ -63,9 +65,8 @@ public class EventService {
                         .collect(Collectors.toList());
             }
             throw new BadRequestException("No events found with the given category.");
-
         } else if (status.equals("unactive")) {
-            if (category.equals("competition")) {
+            if (category.equals("competition") || category.equals("all")) {
                 LocalDate today = LocalDate.now();
                 return eventRepository.findAll()
                         .stream()
@@ -80,7 +81,7 @@ public class EventService {
                         .filter(event -> event.getCategory() == Event.Category.VOLUNTEER)
                         .collect(Collectors.toList());
             }
-            throw new BadRequestException("No events found with the given  category.");
+            throw new BadRequestException("No events found with the given category.");
         }
         throw new BadRequestException("No events found with the given status.");
     }
@@ -100,26 +101,26 @@ public class EventService {
         var user = userRepository.findById(userPrinciple.getId()).orElseThrow();
 
         if (user.getOrganizer() == null) {
-            throw new BadRequestException("User have not an organizer yet");
+            throw new BadRequestException("User does not have an organizer yet");
         }
-        // Create organizer
-         var events = Event.builder()
+
+        // Create event
+        var newEvent = Event.builder()
                 .title(event.getTitle())
                 .description(event.getDescription())
-                 .category(event.getCategory())
-                 .location(event.getLocation())
-                 .poster(event.getPoster())
-                 .registerUrl(event.getRegisterUrl())
-                 .user(user)
-                 .views(event.getViews())
-                 .deadline(event.getDeadline())
+                .category(event.getCategory())
+                .location(event.getLocation())
+                .poster(event.getPoster())
+                .registerUrl(event.getRegisterUrl())
+                .user(user)
+                .views(event.getViews())
+                .deadline(event.getDeadline())
                 .build();
-        // Save organizer
-        eventRepository.save(events);
-        // Update user
 
-
+        // Save event
+        eventRepository.save(newEvent);
     }
+
     public void updateEvent(Long id, Event updatedEvent) {
         Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
@@ -133,6 +134,7 @@ public class EventService {
         existingEvent.setDeadline(updatedEvent.getDeadline());
         eventRepository.save(existingEvent);
     }
+
     public void incrementViewCount(Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
