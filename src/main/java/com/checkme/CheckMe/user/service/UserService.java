@@ -78,6 +78,7 @@ public class UserService {
                 .imageUrl(user.getImageUrl())
                 .role(user.getRole())
                 .affiliation(user.getAffiliation())
+                .gender(user.getGender())
                 .organizer(user.getOrganizer())
                 .build();
     }
