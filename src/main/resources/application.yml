@@ -32,21 +32,21 @@ spring:
           google:
             client-id: 469316436656-70m3c9lf1f91jf20587nvu0ienb01kdc.apps.googleusercontent.com
             client-secret: eoM3dFp6MTlg9cMwGL6Qto7B
-            redirectUri: "https://api.jolmer.me/api/v1/oauth2/callback/{registrationId}"
+            redirectUri: "{baseUrl}/api/v1/oauth2/callback/{registrationId}"
             scope:
               - email
               - profile
           facebook:
             client-id: 1010794449561571
             client-secret: 3deb2e17006b89c14f1f0928771f6039
-            redirectUri: "https://api.jolmer.me/api/v1/oauth2/callback/{registrationId}"
+            redirectUri: "{baseUrl}/api/v1/oauth2/callback/{registrationId}"
             scope:
               - email
               - public_profile
           github:
             client-id: 751fdff903eaf48a3aa5
             client-secret: 2d4106e56336d22e8255d38b0b14539563371914
-            redirectUri: "https://api.jolmer.me/api/v1/oauth2/callback/{registrationId}"
+            redirectUri: "{baseUrl}/api/v1/oauth2/callback/{registrationId}"
             scope:
               - user:email
               - read:user
