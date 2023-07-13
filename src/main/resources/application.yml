@@ -65,10 +65,12 @@ app:
       refresh-token-expiration-in-day: 30
       refresh-token-rotation: false
     cors:
-      allowedOrigins: http://localhost:3000 # Comma separated list of allowed origins
+      allowedOrigins: http://localhost:3000,https://jolmer-frontend.vercel.app,https://www.jolmer.me  # Comma separated list of allowed origins
   oauth2:
     # After successfully authenticating with the OAuth2 Provider,
     # we'll be generating an auth token for the user and sending the token to the
     # redirectUri mentioned by the client in the /oauth2/authorize request.
     authorizedRedirectUris:
       - http://localhost:3000/oauth2/redirect
+      - https://jolmer-frontend.vercel.app/oauth2/redirect
+      - https://www.jolmer.me/oauth2/redirect

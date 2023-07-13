@@ -145,7 +145,7 @@ public class UserService {
         confirmationTokenRepository.save(confirmationToken);
 
         // Send confirmation email
-        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
+        String link = "http://localhost:3000/confirm?token=" + token;
         emailSenderService.send(
                 user.getEmail(),
                 EmailEnableUserTemplate.enableUserEmailTemplate(user.getFirstName(), link),

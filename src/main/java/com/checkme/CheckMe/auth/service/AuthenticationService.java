@@ -15,6 +15,7 @@ import com.checkme.CheckMe.jwt.JwtService;
 import com.checkme.CheckMe.jwt.JwtUtil;
 import com.checkme.CheckMe.user.dto.RefreshTokenRequest;
 import com.checkme.CheckMe.user.dto.RefreshTokenResponse;
+import com.checkme.CheckMe.user.dto.UserProfileResponse;
 import com.checkme.CheckMe.user.dto.UserResponse;
 import com.checkme.CheckMe.user.entity.*;
 import com.checkme.CheckMe.user.repository.RefreshTokenRepository;
@@ -100,7 +101,7 @@ public class AuthenticationService {
         confirmationTokenRepository.save(confirmationToken);
 
         // Send confirmation token to user email
-        String link = "http://localhost:8080/api/v1/registration/confirm?token=" + token;
+        String link = "http://localhost:3000/confirm?token=" + token;
         emailSenderService.send(
                 request.getEmail(),
                 EmailConfirmationTemplate.confirmEmailTemplate(user.getFirstName(), link),
@@ -144,19 +145,26 @@ public class AuthenticationService {
         // Generate JWT token
         JwtToken jwtToken = jwtService.generateJwtToken(user);
 
-        // Generate UserResponse
-        UserResponse userResponse = UserResponse.builder()
+        // Generate userProfileResponse
+        UserProfileResponse userProfileResponse = UserProfileResponse.builder()
                 .id(user.getId())
+                .name(user.getName())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .username(user.getUniqueUsername())
                 .email(user.getEmail())
+                .description(user.getDescription())
+                .imageUrl(user.getImageUrl())
                 .role(user.getRole())
+                .affiliation(user.getAffiliation())
+                .gender(user.getGender())
+                .organizer(user.getOrganizer())
                 .build();
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken.getAccessToken())
                 .refreshToken(jwtToken.getRefreshToken())
-                .user(userResponse)
+                .user(userProfileResponse)
                 .build();
     }
 
@@ -285,7 +293,7 @@ public class AuthenticationService {
         forgotPasswordTokenRepository.save(forgotPasswordToken);
 
         // Send forgot password email
-        String link = "http://localhost:8080/api/auth/reset-password?token=" + token;
+        String link = "http://localhost:3000/reset-password?token=" + token;
         emailSenderService.send(
                 user.getEmail(),
                 EmailForgotPasswordTemplate.forgotPasswordEmailTemplate(user.getFirstName(), link),
