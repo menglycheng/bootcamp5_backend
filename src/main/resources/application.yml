@@ -74,3 +74,10 @@ app:
       - http://localhost:3000/oauth2/redirect
       - https://jolmer-frontend.vercel.app/oauth2/redirect
       - https://www.jolmer.me/oauth2/redirect
+
+
+amazonProperties:
+  endpointUrl: https://checkme-s3-bucket.s3.ap-southeast-1.amazonaws.com
+  accessKey: AKIAQQARP7OT5JYFP4GR
+  secretKey: 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
+  bucketName: checkme-s3-bucket

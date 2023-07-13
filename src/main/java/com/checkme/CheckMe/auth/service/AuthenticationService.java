@@ -16,7 +16,6 @@ import com.checkme.CheckMe.jwt.JwtUtil;
 import com.checkme.CheckMe.user.dto.RefreshTokenRequest;
 import com.checkme.CheckMe.user.dto.RefreshTokenResponse;
 import com.checkme.CheckMe.user.dto.UserProfileResponse;
-import com.checkme.CheckMe.user.dto.UserResponse;
 import com.checkme.CheckMe.user.entity.*;
 import com.checkme.CheckMe.user.repository.RefreshTokenRepository;
 import com.checkme.CheckMe.user.repository.UserRepository;
@@ -154,7 +153,7 @@ public class AuthenticationService {
                 .username(user.getUniqueUsername())
                 .email(user.getEmail())
                 .description(user.getDescription())
-                .imageUrl(user.getImageUrl())
+                .profilePicture(user.getProfilePicture())
                 .role(user.getRole())
                 .affiliation(user.getAffiliation())
                 .gender(user.getGender())
@@ -270,7 +269,6 @@ public class AuthenticationService {
     }
 
     public SuccessResponse forgotPassword(String email) {
-        System.out.println(email + " email");
         // Find user by email
         var user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));

@@ -65,8 +65,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    @Column(columnDefinition = "TEXT")
-    private String imageUrl;
+    private String profilePicture;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -77,8 +76,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-
 
     @NotNull
     @Enumerated(EnumType.STRING)

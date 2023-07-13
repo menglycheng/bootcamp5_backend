@@ -52,8 +52,7 @@ public class Event {
     private String location;
     @Column(
             name="poster",
-            nullable = false,
-            columnDefinition = "TEXT"
+            nullable = false
     )
     private String poster;
     @Column(

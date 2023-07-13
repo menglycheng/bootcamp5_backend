@@ -1,5 +1,8 @@
 package com.checkme.CheckMe.event.service;
 
+import com.checkme.CheckMe.aws.AmazonClientService;
+import com.checkme.CheckMe.event.dto.EventRequest;
+import com.checkme.CheckMe.event.dto.UpdateEventRequest;
 import com.checkme.CheckMe.event.entity.Event;
 import com.checkme.CheckMe.event.repository.EventRepository;
 import com.checkme.CheckMe.exception.BadRequestException;
@@ -19,11 +22,13 @@ import java.util.stream.Collectors;
 public class EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final AmazonClientService amazonClientService;
 
     @Autowired
-    private EventService(EventRepository eventRepository, UserRepository userRepository) {
+    private EventService(EventRepository eventRepository, UserRepository userRepository, AmazonClientService amazonClientService) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.amazonClientService = amazonClientService;
     }
 
     public Event findEventById(Long id) {
@@ -95,7 +100,7 @@ public class EventService {
         return null;
     }
 
-    public void addNewEvent(Event event) throws IllegalAccessException {
+    public void addNewEvent(EventRequest event) throws IllegalAccessException {
         // Get user from security context
         var userPrinciple = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // Get user from database
@@ -105,16 +110,22 @@ public class EventService {
             throw new BadRequestException("User does not have an organizer yet");
         }
 
+        // Check if user uploaded a poster
+        // Create folder path for event poster
+        String folderPath = "event/" + user.getOrganizer().getName() + "/poster";
+        // Upload the poster to AWS S3
+        String posterUrl = amazonClientService.upload(event.getPoster(), folderPath);
+
         // Create event
         var newEvent = Event.builder()
                 .title(event.getTitle())
                 .description(event.getDescription())
                 .category(event.getCategory())
                 .location(event.getLocation())
-                .poster(event.getPoster())
+                .poster(posterUrl)
                 .registerUrl(event.getRegisterUrl())
                 .user(user)
-                .views(event.getViews())
+                .views(0)
                 .deadline(event.getDeadline())
                 .build();
 
@@ -122,17 +133,28 @@ public class EventService {
         eventRepository.save(newEvent);
     }
 
-    public void updateEvent(Long id, Event updatedEvent) {
+    public void updateEvent(Long id, UpdateEventRequest updatedEvent) {
         Event existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found"));
-        existingEvent.setTitle(updatedEvent.getTitle());
-        existingEvent.setDescription(updatedEvent.getDescription());
-        existingEvent.setCategory(updatedEvent.getCategory());
-        existingEvent.setLocation(updatedEvent.getLocation());
-        existingEvent.setPoster(updatedEvent.getPoster());
-        existingEvent.setRegisterUrl(updatedEvent.getRegisterUrl());
-        existingEvent.setViews(updatedEvent.getViews());
-        existingEvent.setDeadline(updatedEvent.getDeadline());
+        existingEvent.setTitle(updatedEvent.getTitle() != null ? updatedEvent.getTitle() : existingEvent.getTitle());
+        existingEvent.setDescription(updatedEvent.getDescription() != null ? updatedEvent.getDescription() :
+                existingEvent.getDescription());
+        existingEvent.setCategory(updatedEvent.getCategory() != null ? updatedEvent.getCategory() :
+                existingEvent.getCategory());
+        existingEvent.setLocation(updatedEvent.getLocation() != null ? updatedEvent.getLocation() :
+                existingEvent.getLocation());
+        existingEvent.setRegisterUrl(updatedEvent.getRegisterUrl() != null ? updatedEvent.getRegisterUrl() :
+                existingEvent.getRegisterUrl());
+        existingEvent.setDeadline(updatedEvent.getDeadline() != null ? updatedEvent.getDeadline() :
+                existingEvent.getDeadline());
+        // Check if user poster is updated
+        if (updatedEvent.getPoster() != null) {
+            // Create folder path for event poster
+            String folderPath = "event/" + existingEvent.getUser().getOrganizer().getName() + "/poster";
+            // Upload the poster to AWS S3
+            String posterUrl = amazonClientService.upload(updatedEvent.getPoster(), folderPath);
+            existingEvent.setPoster(posterUrl);
+        }
         eventRepository.save(existingEvent);
     }
 
