@@ -150,7 +150,7 @@ public class UserService {
         confirmationTokenRepository.save(confirmationToken);
 
         // Send confirmation email
-        String link = "http://localhost:3000/confirm?token=" + token;
+        String link = "https://www.jolmer.me/confirm?token=" + token;
         emailSenderService.send(
                 user.getEmail(),
                 EmailEnableUserTemplate.enableUserEmailTemplate(user.getFirstName(), link),

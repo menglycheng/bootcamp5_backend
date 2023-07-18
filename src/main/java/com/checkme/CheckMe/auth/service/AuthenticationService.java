@@ -100,7 +100,7 @@ public class AuthenticationService {
         confirmationTokenRepository.save(confirmationToken);
 
         // Send confirmation token to user email
-        String link = "http://localhost:3000/confirm?token=" + token;
+        String link = "https://www.jolmer.me/confirm?token=" + token;
         emailSenderService.send(
                 request.getEmail(),
                 EmailConfirmationTemplate.confirmEmailTemplate(user.getFirstName(), link),
@@ -291,7 +291,7 @@ public class AuthenticationService {
         forgotPasswordTokenRepository.save(forgotPasswordToken);
 
         // Send forgot password email
-        String link = "http://localhost:3000/reset-password?token=" + token;
+        String link = "https://www.jolmer.me/reset-password?token=" + token;
         emailSenderService.send(
                 user.getEmail(),
                 EmailForgotPasswordTemplate.forgotPasswordEmailTemplate(user.getFirstName(), link),
