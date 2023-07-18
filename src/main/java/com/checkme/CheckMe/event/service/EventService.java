@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,35 +56,41 @@ public class EventService {
                 throw new BadRequestException("No events found with the given category.");
             }
         } else if (status.equals("active")) {
-            if (category.equals("competition") || category.equals("all")) {
-                LocalDate today = LocalDate.now();
+            if (category.equals("competition")) {
+                LocalDateTime now = LocalDateTime.now();
                 return eventRepository.findAll()
                         .stream()
-                        .filter(event -> event.getDeadline().compareTo(today) >= 0)
+                        .filter(event -> event.getDeadline().compareTo(now) >= 0)
                         .filter(event -> event.getCategory() == Event.Category.COMPETITION)
                         .collect(Collectors.toList());
             } else if (category.equals("volunteer")) {
-                LocalDate today = LocalDate.now();
+                LocalDateTime now = LocalDateTime.now();
                 return eventRepository.findAll()
                         .stream()
-                        .filter(event -> event.getDeadline().compareTo(today) >= 0)
+                        .filter(event -> event.getDeadline().compareTo(now) >= 0)
                         .filter(event -> event.getCategory() == Event.Category.VOLUNTEER)
+                        .collect(Collectors.toList());
+            } else if (category.equals("all")) {
+                LocalDateTime now = LocalDateTime.now();
+                return eventRepository.findAll()
+                        .stream()
+                        .filter(event -> event.getDeadline().compareTo(now) >= 0)
                         .collect(Collectors.toList());
             }
             throw new BadRequestException("No events found with the given category.");
         } else if (status.equals("unactive")) {
-            if (category.equals("competition") || category.equals("all")) {
-                LocalDate today = LocalDate.now();
+            if (category.equals("competition")) {
+                LocalDateTime now = LocalDateTime.now();
                 return eventRepository.findAll()
                         .stream()
-                        .filter(event -> event.getDeadline().compareTo(today) <= 0)
+                        .filter(event -> event.getDeadline().compareTo(now) <= 0)
                         .filter(event -> event.getCategory() == Event.Category.COMPETITION)
                         .collect(Collectors.toList());
             } else if (category.equals("volunteer")) {
-                LocalDate today = LocalDate.now();
+                LocalDateTime now = LocalDateTime.now();
                 return eventRepository.findAll()
                         .stream()
-                        .filter(event -> event.getDeadline().compareTo(today) <= 0)
+                        .filter(event -> event.getDeadline().compareTo(now) <= 0)
                         .filter(event -> event.getCategory() == Event.Category.VOLUNTEER)
                         .collect(Collectors.toList());
             }
@@ -126,7 +134,7 @@ public class EventService {
                 .registerUrl(event.getRegisterUrl())
                 .user(user)
                 .views(0)
-                .deadline(event.getDeadline())
+                .deadline(LocalDateTime.of(event.getDeadline(), LocalTime.MIDNIGHT))
                 .build();
 
         // Save event
@@ -145,7 +153,8 @@ public class EventService {
                 existingEvent.getLocation());
         existingEvent.setRegisterUrl(updatedEvent.getRegisterUrl() != null ? updatedEvent.getRegisterUrl() :
                 existingEvent.getRegisterUrl());
-        existingEvent.setDeadline(updatedEvent.getDeadline() != null ? updatedEvent.getDeadline() :
+        existingEvent.setDeadline(updatedEvent.getDeadline() != null ?
+                LocalDateTime.of(updatedEvent.getDeadline(), LocalTime.MIDNIGHT) :
                 existingEvent.getDeadline());
         // Check if user poster is updated
         if (updatedEvent.getPoster() != null) {
