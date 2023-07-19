@@ -38,6 +38,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/user/deactivate").authenticated()
                         .requestMatchers("/api/v1/user/organizer").authenticated()
                         .requestMatchers("/api/v1/events/post").authenticated()
+                                .requestMatchers("/api/v1/favorite-events").authenticated()
+
 //                        .requestMatchers("/api/v1/event/**").authenticated()
                         .anyRequest().permitAll()
                 )
