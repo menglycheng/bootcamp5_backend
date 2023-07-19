@@ -35,9 +35,9 @@ public class UserController {
     }
 
     // Update profile
-    @PatchMapping("/profile")
-    public ResponseEntity<UpdateProfileDTO> updateProfile(
-            @Valid @RequestBody UpdateProfileDTO request
+    @PatchMapping(value = "/profile", consumes = "multipart/form-data")
+    public ResponseEntity<UpdateProfileResponse> updateProfile(
+            @Valid @RequestBody @ModelAttribute UpdateProfileDTO request
     ) {
         LOGGER.info("Update Profile");
         return ResponseEntity.ok(userService.updateProfile(request));

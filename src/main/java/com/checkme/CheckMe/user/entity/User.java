@@ -65,7 +65,7 @@ public class User implements UserDetails {
     @JsonIgnore
     private String password;
 
-    private String imageUrl;
+    private String profilePicture;
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -76,8 +76,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-
 
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -109,7 +107,7 @@ public class User implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
+    public @NotNull String getUsername() {
         return email; // Use email as username
     }
 

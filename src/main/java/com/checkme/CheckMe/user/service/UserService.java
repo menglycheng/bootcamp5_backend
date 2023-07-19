@@ -3,14 +3,12 @@ package com.checkme.CheckMe.user.service;
 import com.checkme.CheckMe.auth.dto.SuccessResponse;
 import com.checkme.CheckMe.auth.entity.ConfirmationToken;
 import com.checkme.CheckMe.auth.repository.ConfirmationTokenRepository;
+import com.checkme.CheckMe.aws.AmazonClientService;
 import com.checkme.CheckMe.email.EmailEnableUserTemplate;
 import com.checkme.CheckMe.email.EmailSenderService;
 import com.checkme.CheckMe.exception.BadRequestException;
 import com.checkme.CheckMe.exception.ResourceNotFoundException;
-import com.checkme.CheckMe.user.dto.OrganizerDTO;
-import com.checkme.CheckMe.user.dto.UpdateOrganizerProfileDTO;
-import com.checkme.CheckMe.user.dto.UpdateProfileDTO;
-import com.checkme.CheckMe.user.dto.UserProfileResponse;
+import com.checkme.CheckMe.user.dto.*;
 import com.checkme.CheckMe.user.entity.Organizer;
 import com.checkme.CheckMe.user.entity.User;
 import com.checkme.CheckMe.user.repository.OrganizerRepository;
@@ -31,6 +29,7 @@ public class UserService {
     private final EmailSenderService emailSenderService;
     private final RefreshTokenRepository refreshTokenRepository;
     private final OrganizerRepository organizerRepository;
+    private final AmazonClientService amazonClientService;
 
     public void enableUserByEmail(String email) {
         userRepository.enableUser(email);
@@ -55,9 +54,10 @@ public class UserService {
                 .username(user.getUniqueUsername())
                 .email(user.getEmail())
                 .description(user.getDescription())
-                .imageUrl(user.getImageUrl())
+                .profilePicture(user.getProfilePicture())
                 .role(user.getRole())
                 .affiliation(user.getAffiliation())
+                .gender(user.getGender())
                 .organizer(user.getOrganizer())
                 .build();
     }
@@ -75,16 +75,17 @@ public class UserService {
                 .username(user.getUniqueUsername())
                 .email(user.getEmail())
                 .description(user.getDescription())
-                .imageUrl(user.getImageUrl())
+                .profilePicture(user.getProfilePicture())
                 .role(user.getRole())
                 .affiliation(user.getAffiliation())
+                .gender(user.getGender())
                 .organizer(user.getOrganizer())
                 .build();
     }
 
 
     // update user profile
-    public UpdateProfileDTO updateProfile(UpdateProfileDTO request) {
+    public UpdateProfileResponse updateProfile(UpdateProfileDTO request) {
         // Get user from security context
         var userPrinciple = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // Get user from database
@@ -95,7 +96,14 @@ public class UserService {
         user.setLastName(request.getLastName() != null ? request.getLastName() : user.getLastName());
         user.setDescription(request.getDescription() != null ? request.getDescription() : user.getDescription());
         user.setAffiliation(request.getAffiliation() != null ? request.getAffiliation() : user.getAffiliation());
-        user.setImageUrl(request.getImageUrl() != null ? request.getImageUrl() : user.getImageUrl());
+        user.setGender(request.getGender() !=null ? request.getGender() : user.getGender());
+        if (request.getProfilePicture() != null) {
+            // Create folder path for user
+            var folderPath = "user/" + user.getUniqueUsername() + "/";
+            // Upload image to AWS S3
+            var imageUrl = amazonClientService.upload(request.getProfilePicture(), folderPath);
+            user.setProfilePicture(imageUrl);
+        }
         // If user update username, check if it is unique
         if (request.getUsername() != null) {
             // Check if username is unique
@@ -106,14 +114,15 @@ public class UserService {
         }
         // Save user
         userRepository.save(user);
-        return UpdateProfileDTO.builder()
+        return UpdateProfileResponse.builder()
                 .name(user.getName())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .username(user.getUniqueUsername())
                 .description(user.getDescription())
-                .imageUrl(user.getImageUrl())
+                .profilePicture(user.getProfilePicture())
                 .affiliation(user.getAffiliation())
+                .gender(user.getGender())
                 .build();
     }
 
@@ -141,7 +150,7 @@ public class UserService {
         confirmationTokenRepository.save(confirmationToken);
 
         // Send confirmation email
-        String link = "http://localhost:8080/api/auth/confirm?token=" + token;
+        String link = "https://www.jolmer.me/confirm?token=" + token;
         emailSenderService.send(
                 user.getEmail(),
                 EmailEnableUserTemplate.enableUserEmailTemplate(user.getFirstName(), link),

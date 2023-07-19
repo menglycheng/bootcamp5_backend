@@ -19,7 +19,7 @@ public class UserProfileResponse {
     private String username;
     private String email;
     private String description;
-    private String imageUrl;
+    private String profilePicture;
 
     @Enumerated(EnumType.STRING)
     private Role role;

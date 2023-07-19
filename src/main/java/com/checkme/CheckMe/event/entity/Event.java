@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity(name= "Event")
 @Table
@@ -52,8 +53,7 @@ public class Event {
     private String location;
     @Column(
             name="poster",
-            nullable = false,
-            columnDefinition = "TEXT"
+            nullable = false
     )
     private String poster;
     @Column(
@@ -71,12 +71,12 @@ public class Event {
             name="deadline",
             nullable = false
     )
-    private LocalDate deadline;
+    private LocalDateTime deadline;
 
     @Builder
     public Event(Long id, String title, String description, Category category,
                  String location, String poster, String registerUrl, User user,
-                 int views, LocalDate deadline) {
+                 int views, LocalDateTime deadline) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -172,11 +172,11 @@ public class Event {
 
 
 
-    public LocalDate getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
     }
 }
