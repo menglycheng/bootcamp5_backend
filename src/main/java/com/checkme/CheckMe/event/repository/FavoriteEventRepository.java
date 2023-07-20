@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface FavoriteEventRepository extends JpaRepository<FavoriteEvent, Long> {
 
+    FavoriteEvent findByUserAndEvent(User currentUser, Event event);
 }

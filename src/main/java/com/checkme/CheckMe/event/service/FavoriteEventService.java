@@ -46,6 +46,13 @@ public class FavoriteEventService {
     public FavoriteEvent saveFavoriteEvent(Long eventId) {
         User currentUser = getCurrentUser();
 
+        FavoriteEvent existingFavoriteEvent = favoriteEventRepository.findByUserAndEvent(currentUser, eventRepository.findById(eventId).orElse(null));
+
+        if (existingFavoriteEvent != null) {
+
+            return existingFavoriteEvent;
+        }
+
         // Retrieve the user from the database
         Optional<User> optionalUser = userRepository.findById(currentUser.getId());
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("User not found"));
@@ -66,17 +73,24 @@ public class FavoriteEventService {
         return savedFavoriteEvent;
     }
 
+
     public List<FavoriteEvent> getFavoriteEventsByUser(String username) {
         return favoriteEventRepository.findAll().stream()
                 .filter(favEvent -> favEvent.getUser().getUniqueUsername().equals(username))
                 .collect(Collectors.toList());
     }
-    public List<Event> deleteFavEvent(Long id) {
-        if (favoriteEventRepository.findById(id).isEmpty()) {
-            throw new BadRequestException("Event not found");
+    public void deleteFavEvent(Long eventId) {
+        User currentUser = getCurrentUser();
+
+        // Find the favorite event by event ID and current user
+        FavoriteEvent favoriteEventToDelete = favoriteEventRepository.findByUserAndEvent(currentUser, eventRepository.findById(eventId).orElse(null));
+
+        if (favoriteEventToDelete == null) {
+            throw new BadRequestException("Favorite event not found for the current user and event ID");
         }
-        favoriteEventRepository.deleteById(id);
-        return null;
+
+        // Delete the favorite event
+        favoriteEventRepository.deleteById(favoriteEventToDelete.getId());
     }
 
 }
